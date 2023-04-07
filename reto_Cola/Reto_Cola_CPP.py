@@ -4,11 +4,12 @@
 # c. determinar qué cabina recaudó mayor cantidad de pesos ($).
 # d. determinar cuántos vehículos de cada tipo se atendieron en cada cola.
 
-from TDA_Cola import Cola, arribo, atencion, cola_vacia, tamaño, en_frente, barrido_mover_final, mover_al_final
+from TDA_Cola import Cola, arribo, atencion, cola_vacia, tamaño, en_frente, barrido_mover_final, mover_al_final,barrido
 import random
-
+# hacer referencia directamente al precio del vehiculo
 tipos_vehiculos = ['automóvil', 'camioneta', 'camión', 'colectivo', 'moto']
 tarifas_vehiculos = [47, 59, 71, 64, 35]
+
 listaContador = [0 for _ in range(len(tipos_vehiculos))]
 total = [0 for _ in range(len(tipos_vehiculos))]
 
@@ -31,6 +32,18 @@ def agregar_vehiculo():
     total[tipos_vehiculos.index(tipo_vehiculo)] += precio
     cabina = random.choice([cabina1, cabina2, cabina3])
     arribo(cabina, vehiculo)
+    
+def atender_vehiculo(cabina):
+    while not cola_vacia(cabina):
+        vehiculo = en_frente(cabina)
+        tipo_vehiculo = vehiculo['tipo']
+        tarifa_vehiculo = vehiculo['tarifa']
+        atencion(cabina)
+        print(f"Cabina {cabina}: Cobrando ${tarifa_vehiculo} por vehículo de tipo {tipo_vehiculo}")
+    barrido(cabina)
+    print(f"Cabina {cabina}: No hay vehículos en espera")
+    
+
 
 
 # Agregar 30 vehículos de manera aleatoria a las cabinas de cobro
@@ -58,6 +71,7 @@ while True:
         print("Ingresos en la cabina 3:", total[2] * listaContador[2])
         
     elif opcion == 'c':
+        # usar atencion y barrido
         recaudacion_cabina1 = total[0] * listaContador[0]
         recaudacion_cabina2 = total[1] * listaContador[1]
         recaudacion_cabina3 = total[2] * listaContador[2]
@@ -71,7 +85,27 @@ while True:
             print(f"Número de vehículos de tipo {tipos_vehiculos[i]}: {listaContador[i]}")
             
     elif opcion == 'e':
+        print("ha finalizado el programa")
         break
-    
+    elif opcion == 'f':
+        while not cola_vacia(cabina1) or not cola_vacia(cabina2) or not cola_vacia(cabina3):
+            if not cola_vacia(cabina1):
+                atender_vehiculo(cabina1)
+                barrido(cabina1)
+                atencion(cabina1)
+                
+            if not cola_vacia(cabina2):
+                atender_vehiculo(cabina2)
+                barrido(cabina2)
+                atencion(cabina2)
+                
+            if not cola_vacia(cabina3):
+                atender_vehiculo(cabina3)
+                barrido(cabina3)
+                atencion(cabina3)
+                
+        print("Todas las cabinas han terminado de atender vehículos.")
+        break
+
     else:
         print("Opción inválida, intente nuevamente.")
