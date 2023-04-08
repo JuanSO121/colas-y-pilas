@@ -6,9 +6,17 @@
 
 from TDA_Cola import Cola, arribo, atencion, cola_vacia, tamaño, en_frente, barrido_mover_final, mover_al_final,barrido
 import random
-# hacer referencia directamente al precio del vehiculo
 tipos_vehiculos = ['automóvil', 'camioneta', 'camión', 'colectivo', 'moto']
-tarifas_vehiculos = [47, 59, 71, 64, 35]
+
+# hacer referencia directamente al precio del vehiculo
+tarifas_vehiculos = {
+    'automóvil': 47,
+    'camioneta': 59,
+    'camión': 71,
+    'colectivo': 64,
+    'moto': 35
+}
+
 
 listaContador = [0 for _ in range(len(tipos_vehiculos))]
 total = [0 for _ in range(len(tipos_vehiculos))]
@@ -17,32 +25,46 @@ cabina1 = Cola()
 cabina2 = Cola()
 cabina3 = Cola()
 
+# Crear diccionario con los contadores por tipo de vehículo y por cabina
+vehiculos_por_cabina_y_tipo = {cabina1: {tipo: 0 for tipo in tipos_vehiculos}, 
+                               cabina2: {tipo: 0 for tipo in tipos_vehiculos}, 
+                               cabina3: {tipo: 0 for tipo in tipos_vehiculos}}
+
 # Función para agregar un vehículo a una cabina de cobro
 def agregar_vehiculo():
     tipo_vehiculo = random.choice(tipos_vehiculos)
-    tarifa_vehiculo = tarifas_vehiculos[tipos_vehiculos.index(tipo_vehiculo)]
+    tarifa_vehiculo = tarifas_vehiculos[tipo_vehiculo]
     vehiculo = {
         'tipo': tipo_vehiculo,
         'tarifa': tarifa_vehiculo,
         'tiempo_llegada': random.randint(0, 30),
         'cabina_asignada': None,
     }
+    
     precio = tarifa_vehiculo
     listaContador[tipos_vehiculos.index(tipo_vehiculo)] += 1
     total[tipos_vehiculos.index(tipo_vehiculo)] += precio
     cabina = random.choice([cabina1, cabina2, cabina3])
     arribo(cabina, vehiculo)
     
+
+    # Incrementar el contador correspondiente en el diccionario
+    vehiculos_por_cabina_y_tipo[cabina][tipo_vehiculo] += 1
+    
 def atender_vehiculo(cabina):
+    vehiculos_atendidos = []
     while not cola_vacia(cabina):
         vehiculo = en_frente(cabina)
         tipo_vehiculo = vehiculo['tipo']
         tarifa_vehiculo = vehiculo['tarifa']
         atencion(cabina)
         print(f"Cabina {cabina}: Cobrando ${tarifa_vehiculo} por vehículo de tipo {tipo_vehiculo}")
-    barrido(cabina)
+        vehiculos_atendidos.append(vehiculo)
     print(f"Cabina {cabina}: No hay vehículos en espera")
-    
+    total_recaudado_cabina = sum([vehiculo['tarifa'] for vehiculo in vehiculos_atendidos])
+    cantidad_vehiculos_atendidos = len(vehiculos_atendidos)
+    print(f"Cabina {cabina}: Total recaudado ${total_recaudado_cabina} por {cantidad_vehiculos_atendidos} vehículos")
+
 
 
 
@@ -52,25 +74,37 @@ for i in range(30):
 
 while True:
     print("\n Seleccione una opción:")
-    print("a) Mostrar el número de vehículos en cada cabina")
-    print("b) Mostrar la cantidad total de ingresos en cada cabina")
-    print("c) Determinar la cabina que recaudó la mayor cantidad de pesos")
-    print("d) Mostrar el número de vehículos de cada tipo que pasaron por las cabinas de peaje")
-    print("e) Salir del programa")
+    print("a) realizar la atención de las cabinas")
+    print("b) Determinar la cabina que recaudó la mayor cantidad de pesos")
+    print("c) Mostrar el número de vehículos que pasaron por las cabinas de peaje")
+    print("d) Salir del programa")
 
     opcion = input()
-
+          
     if opcion == 'a':
-        print("Vehículos en la cabina 1:", tamaño(cabina1))
-        print("Vehículos en la cabina 2:", tamaño(cabina2))
-        print("Vehículos en la cabina 3:", tamaño(cabina3))
+                # Atender los vehículos en las cabinas de cobro
+        for cabina in [cabina1, cabina2, cabina3]:
+            atender_vehiculo(cabina)
+            total_recaudado_cabina = sum([vehiculo['tarifa'] for vehiculo in barrido(cabina)])
+            print(f"Cabina {cabina}: Total recaudado ${total_recaudado_cabina}")
+            
+        print("Todas las cabinas han terminado de atender vehículos.")
+
         
     elif opcion == 'b':
+        print("Vehículos que pasaron por cada cabina:")
+        for cabina in [cabina1, cabina2, cabina3]:
+            num_vehiculos = tamaño(cabina)
+            print(f"{cabina}: {num_vehiculos} vehículos")
+            for tipo_vehiculo in tipos_vehiculos:
+                num_vehiculos_tipo = vehiculos_por_cabina_y_tipo[cabina][tipo_vehiculo]
+                print(f"\t{tipo_vehiculo}: {num_vehiculos_tipo}")
+    
+    elif opcion == 'c':
         print("Ingresos en la cabina 1:", total[0] * listaContador[0])
         print("Ingresos en la cabina 2:", total[1] * listaContador[1])
         print("Ingresos en la cabina 3:", total[2] * listaContador[2])
-        
-    elif opcion == 'c':
+    
         # usar atencion y barrido
         recaudacion_cabina1 = total[0] * listaContador[0]
         recaudacion_cabina2 = total[1] * listaContador[1]
@@ -79,32 +113,9 @@ while True:
         mayor_recaudacion = max(recaudaciones)
         cabina_ganadora = recaudaciones.index(mayor_recaudacion) + 1
         print(f"La cabina que recaudó la mayor cantidad de pesos fue la número {cabina_ganadora}")
-        
+      
     elif opcion == 'd':
-        for i in range(len(tipos_vehiculos)):
-            print(f"Número de vehículos de tipo {tipos_vehiculos[i]}: {listaContador[i]}")
-            
-    elif opcion == 'e':
         print("ha finalizado el programa")
-        break
-    elif opcion == 'f':
-        while not cola_vacia(cabina1) or not cola_vacia(cabina2) or not cola_vacia(cabina3):
-            if not cola_vacia(cabina1):
-                atender_vehiculo(cabina1)
-                barrido(cabina1)
-                atencion(cabina1)
-                
-            if not cola_vacia(cabina2):
-                atender_vehiculo(cabina2)
-                barrido(cabina2)
-                atencion(cabina2)
-                
-            if not cola_vacia(cabina3):
-                atender_vehiculo(cabina3)
-                barrido(cabina3)
-                atencion(cabina3)
-                
-        print("Todas las cabinas han terminado de atender vehículos.")
         break
 
     else:
