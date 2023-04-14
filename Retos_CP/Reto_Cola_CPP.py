@@ -4,6 +4,7 @@
 # c. determinar qué cabina recaudó mayor cantidad de pesos ($).
 # d. determinar cuántos vehículos de cada tipo se atendieron en cada cola.
 
+# tomar el tamañpo de cada cabina para que la atencion atienda a todas
 from TDA_Cola import Cola, arribo, atencion, cola_vacia, tamaño, en_frente, barrido_mover_final, mover_al_final,barrido
 import random
 tipos_vehiculos = ['automóvil', 'camioneta', 'camión', 'colectivo', 'moto']

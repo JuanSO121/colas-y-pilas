@@ -7,6 +7,9 @@ b. determinar los personajes que participaron en más de 5 películas de la saga
 c. determinar en cuantas películas participó la Viuda Negra (Black Widow);
 
 d. mostrar todos los personajes cuyos nombre empiezan con C, D y G."""
+
+# crear auxiliar para rellenar la pila
+
 from TDA_Pila import Pila, apilar, desapilar, pila_vacia,barrido
 
 superheroes = {

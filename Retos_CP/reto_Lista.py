@@ -5,8 +5,9 @@
 # c) se debe indicar el promedio de temperatura y humedad de todas las estaciones durante un mes especificado
 # d)se deben buscar las estaciones meteorologicas que hayan registrado un estado de clima determinado.
 
+# arreglar estructura 
 import random
-from tda_lista import Lista, insertar, barrido, buscar, eliminar
+from TDA_Lista import Lista, insertar, barrido, buscar, eliminar
 
 class Coordenadas:
     def __init__(self, latitud, longitud, altitud):
@@ -133,6 +134,7 @@ while True:
         barrido(lista)
         
     elif opcion == 'b':
+        # cuantos registros hubo den cada estacion?
         mes = input('Ingrese el mes para calcular el promedio de temperatura y humedad (1 - 12): ')
         if mes.isnumeric() and 1 <= int(mes) <= 12:
             promedio(mes)
@@ -140,6 +142,7 @@ while True:
             print('Mes inválido. Intente nuevamente.')
         
     elif opcion == 'c':
+        # numerar
         buscado = input('\nIngrese un clima a buscar (soleado, nublado, lluvia, nevado): ')
         buscarEstacionesPorClima(buscado)
          
