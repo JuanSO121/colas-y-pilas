@@ -19,6 +19,16 @@ def desapilar(pila):
     pila.tamaño -= 1
     return x
 
+def vaciar_pila(pila):
+    while not pila_vacia(pila):
+        x = desapilar(pila)
+
+def buscar(pila, buscado):
+    aux = pila.cima
+    while(aux is not None and aux.info != buscado):
+        aux = aux.sig
+    return aux
+
 def pila_vacia(pila):
     return pila.cima is None
 

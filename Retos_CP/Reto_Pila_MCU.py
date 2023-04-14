@@ -34,16 +34,20 @@ def rellenar_pila():
 
 pila_mcu = Pila()
 
+# pilaAux = Pila()
+# pilaAux = barrido(pila_mcu)
+
+# barrido(pilaAux)
 # Función para apilar los superhéroes
 def agregar_superheroes():
     for nombre, peliculas in superheroes.items():
         apilar(pila_mcu, (nombre, peliculas))
 
 # Llamamos a la función para cargar los superhéroes en la pila
-print("Apilando los superhéroes...")
-agregar_superheroes()
-print("¡Superhéroes apilados con éxito!")
-print()
+# print("Apilando los superhéroes...")
+# agregar_superheroes()
+# print("¡Superhéroes apilados con éxito!")
+# print()
 
 print("¿Qué actividad desea realizar?")
 print("1. En qué posición se encuentran Rocket Raccoon y Groot?")
@@ -57,9 +61,10 @@ opcion = input("Elija una opción: ")
 while opcion != "5":
     
     if opcion == "1":
+        agregar_superheroes()
         posicion = 1
         personajes_encontrados = 0
-        while not pila_vacia(pila_mcu) and personajes_encontrados < 2:
+        while not pila_vacia(pila_mcu):
             personaje = desapilar(pila_mcu)
             if personaje[0] in ("Rocket Raccoon", "Groot"):
                 print(f"{personaje[0]} se encuentra en la posición {posicion}")
@@ -69,14 +74,17 @@ while opcion != "5":
                 print("No se encontraron personajes")
 
     elif opcion == "2":
+        agregar_superheroes()
         print("\nPersonajes que participaron en más de 5 películas:")
+        # rellenar_pila()
         while not pila_vacia(pila_mcu):
             personaje = desapilar(pila_mcu)
             if personaje[1] > 5:
                 print(f"- {personaje[0]} ({personaje[1]} películas)")
                 
     if opcion == "3":
-        rellenar_pila()
+        agregar_superheroes()
+        # rellenar_pila()
         while not pila_vacia(pila_mcu):
             personaje = desapilar(pila_mcu)
             if personaje[0] == "Black Widow":
@@ -84,7 +92,8 @@ while opcion != "5":
                 break
             
     elif opcion == "4":
-        rellenar_pila()
+        agregar_superheroes()
+        # rellenar_pila()
         personajes_cdg = []
         while not pila_vacia(pila_mcu):
             personaje = desapilar(pila_mcu)

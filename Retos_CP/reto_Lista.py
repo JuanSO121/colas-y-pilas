@@ -52,7 +52,9 @@ def crearEstaciones(cant_estaciones):
  
         for j in range(30):
             mesBuscar = random.randint(1, 12)
-            fecha = f"{j+1}/{mesBuscar}/2023" 
+            año = random.randint(1990,2023)
+            # el año tambien cambia
+            fecha = f"{j+1}/{mesBuscar}/{año}" 
             
             registro = RegistroMeteorologico(
                 random.uniform(5, 35),
